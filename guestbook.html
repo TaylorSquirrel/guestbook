@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guestbook</title>
+  <link href="/style.css" rel="stylesheet">
+</head>
+<body>
+
+<h1>Guestbook</h1>
+
+<form id="form">
+  <input type="text" id="name" placeholder="Your name (optional)">
+  <br><br>
+  <textarea id="message" required placeholder="Write a message"></textarea>
+  <br><br>
+  <button type="submit">Submit</button>
+</form>
+
+<h2>Messages</h2>
+<div id="messages"></div>
+
+<script>
+const API = "https://guestbookapi-qpo8.onrender.com/api/messages";
+
+const form = document.getElementById("form");
+const messagesDiv = document.getElementById("messages");
+
+async function loadMessages() {
+  try {
+    const res = await fetch(API);
+    const data = await res.json();
+    messagesDiv.innerHTML = "";
+    data.reverse().forEach(msg => {
+      messagesDiv.innerHTML += `
+        <p>
+          <strong>${msg.name}</strong> 
+          (${new Date(msg.date).toLocaleString()}):<br>
+          ${msg.message}
+        </p>
+        <hr>
+      `;
+    });
+  } catch (err) {
+    messagesDiv.innerHTML = "<p>Failed to load messages.</p>";
+  }
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: document.getElementById("name").value,
+        message: document.getElementById("message").value
+      })
+    });
+    form.reset();
+    loadMessages();
+  } catch (err) {
+    alert("Failed to submit message.");
+  }
+});
+
+// Load messages on page load
+loadMessages();
+</script>
+
+</body>
+</html>
