@@ -1,0 +1,90 @@
+/* CSS is how you can add style to your website, such as colors, fonts, and positioning of your
+   HTML content. To learn how to do something, just try searching Google for questions like
+   "how to change link color." */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+  background-color: #e73256;
+  color: black;
+
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.pixel-font {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 32px;
+}
+
+.banner img {
+    width: 100%;
+    height: auto;
+    display: block; /* removes inline spacing below image */
+    margin: 0;
+}
+
+.divider {
+    height: 15px;
+    background-color: #73326A;
+    border: none;
+    margin: 0;  /* remove default spacing */
+}
+
+.divider2 {
+    height: 2px;
+    background-color: #e73256;
+    border: none;
+    margin: 0;  /* remove default spacing */
+}
+    
+.notfounddiv {
+    height: 4px;
+    background-color:#e73256;
+    border: none;
+    margin: 0;  /* remove default spacing */
+}
+
+.rainbow-text {
+  /* Set your initial HSLA color (Hue, Saturation, Lightness, Alpha) */
+  color: hsla(0, 100%, 70%, 1); 
+  
+  /* Apply the animation: name, duration, infinite loop, smooth speed */
+  animation: colorCycle 3s linear infinite;
+}
+
+@keyframes colorCycle {
+  from { filter: hue-rotate(0deg); }
+  to { filter: hue-rotate(360deg); }
+}
+
+/* welcome title classes (with help from chatgpt) */
+.container1 {
+  position: relative;       /* allows children to be positioned absolutely */
+  width: 100%;
+  height: 160px;            /* adjust height to fit image and text */
+  display: flex;
+  justify-content: center;  /* centers text horizontally */
+  align-items: center;      /* centers text vertically */
+  text-align: center;
+  overflow: hidden;         /* hides overflow if image is bigger */
+
+}
+
+.container1 img {
+  position: absolute;       /* absolute inside relative container */
+  top: 50%;
+  left: 49.5%;
+  transform: translate(-50%, -50%); /* centers the image */
+  max-width: 100%;          /* scale image to container width */
+  height: auto;
+  z-index: 1;               /* behind the text */
+  opacity: 0.5;             /* optional: make background semi-transparent */
+
+}
+
+.container1 h1 {
+  position: relative;       /* stay above image */
+  z-index: 2;               /* higher than image */
+  margin: 0;
+}
+
