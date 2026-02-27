@@ -1,39 +1,46 @@
 const express = require("express");
-const fs = require("fs");
-const path = require("path");
+const fetch = require("node-fetch"); // if Node < 18, install: npm install node-fetch
 const cors = require("cors");
 
 const app = express();
-const PORT = process.env.PORT || 10000;
-
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public"))); // serve static files
+app.use(express.static("public")); // guestbook.html + style.css live here
 
-const filePath = path.join(__dirname, "messages.json");
+const PORT = process.env.PORT || 10000;
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWcF6p_yN6z994DG_qM8SXFdZwOnM-cY6danysq0HrUszm3g6Mr7vwMll7jiFN4Dlgjg/exec";
 
-// API: get all messages
-app.get("/api/messages", (req, res) => {
-  const data = fs.readFileSync(filePath);
-  res.json(JSON.parse(data));
+// Get messages from Google Sheets
+app.get("/api/messages", async (req, res) => {
+  try {
+    const response = await fetch(GOOGLE_SCRIPT_URL);
+    const data = await response.json();
+    res.json(data.reverse()); // latest first
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to load messages" });
+  }
 });
 
-// API: add a message
-app.post("/api/messages", (req, res) => {
+// Post message to Google Sheets
+app.post("/api/messages", async (req, res) => {
   const { name, message } = req.body;
+
   if (!message || message.trim() === "") {
     return res.status(400).json({ error: "Message required" });
   }
 
-  const data = JSON.parse(fs.readFileSync(filePath));
-  data.push({ name: name || "Anonymous", message, date: new Date().toISOString() });
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-  res.json({ success: true });
-});
-
-// Serve guestbook.html for the root route
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "guestbook.html"));
+  try {
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ name, message })
+      // no headers needed, avoids CORS preflight
+    });
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to submit message" });
+  }
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
