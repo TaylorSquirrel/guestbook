@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Guestbook</title>
-  <link href="/style.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
 </head>
 <body>
 
@@ -20,7 +20,7 @@
 <div id="messages"></div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbzUbfO4yAasnCBkwOgC8TMO8UDNaZ4LhoHVGt9smLXWUuU5NW4PwlyBZ0E2rbR58X4XHg/exec"; // relative URL works since frontend & backend on same domain
+const API = "https://script.google.com/macros/s/AKfycbwWcF6p_yN6z994DG_qM8SXFdZwOnM-cY6danysq0HrUszm3g6Mr7vwMll7jiFN4Dlgjg/exec";
 
 const form = document.getElementById("form");
 const messagesDiv = document.getElementById("messages");
@@ -29,7 +29,9 @@ async function loadMessages() {
   try {
     const res = await fetch(API);
     const data = await res.json();
+
     messagesDiv.innerHTML = "";
+
     data.reverse().forEach(msg => {
       messagesDiv.innerHTML += `
         <div class="message-box">
@@ -46,15 +48,16 @@ async function loadMessages() {
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   try {
     await fetch(API, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: document.getElementById("name").value,
         message: document.getElementById("message").value
       })
     });
+
     form.reset();
     loadMessages();
   } catch (err) {
@@ -62,7 +65,6 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-// Load messages on page load
 loadMessages();
 </script>
 
