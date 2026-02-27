@@ -12,9 +12,7 @@
 
 <form id="form">
   <input type="text" id="name" placeholder="Your name (optional)">
-  <br><br>
   <textarea id="message" required placeholder="Write a message"></textarea>
-  <br><br>
   <button type="submit">Submit</button>
 </form>
 
@@ -22,7 +20,7 @@
 <div id="messages"></div>
 
 <script>
-const API = "https://guestbookapi-qpo8.onrender.com/api/messages";
+const API = "/api/messages"; // relative URL works since frontend & backend on same domain
 
 const form = document.getElementById("form");
 const messagesDiv = document.getElementById("messages");
@@ -34,12 +32,11 @@ async function loadMessages() {
     messagesDiv.innerHTML = "";
     data.reverse().forEach(msg => {
       messagesDiv.innerHTML += `
-        <p>
-          <strong>${msg.name}</strong> 
-          (${new Date(msg.date).toLocaleString()}):<br>
-          ${msg.message}
-        </p>
-        <hr>
+        <div class="message-box">
+          <strong>${msg.name}</strong>
+          <small>${new Date(msg.date).toLocaleString()}</small>
+          <p>${msg.message}</p>
+        </div>
       `;
     });
   } catch (err) {
