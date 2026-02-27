@@ -16,7 +16,7 @@ h1, h2 {
 form {
   display: inline-block;      /* center the form */
   text-align: left;           /* keep text inside inputs left-aligned */
-  background-color: #fff;
+  background-color: #73326a;
   padding: 20px 30px;
   border-radius: 15px;        /* rounded corners for form */
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -60,7 +60,7 @@ button:hover {
 
 /* ===== INDIVIDUAL MESSAGE BOX ===== */
 .message-box {
-  background-color: #ef931b;   /* orange box */
+  background-color: #73326a;   /* orange box */
   border-radius: 15px;         /* rounded corners */
   padding: 15px 20px;          /* spacing inside the box */
   margin-bottom: 15px;         /* space between messages */
