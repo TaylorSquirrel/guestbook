@@ -4,18 +4,23 @@ body {
   color: black;
   margin: 0;
   font-family: Arial, sans-serif;
-  text-align: center; /* center everything horizontally */
+  text-align: center; /* center headings and form */
+}
+
+/* ===== HEADINGS ===== */
+h1, h2 {
+  margin: 20px 0;
 }
 
 /* ===== FORM ===== */
 form {
-  display: inline-block;      /* allows form to be centered */
+  display: inline-block;      /* center the form */
   text-align: left;           /* keep text inside inputs left-aligned */
   background-color: #fff;
   padding: 20px 30px;
   border-radius: 15px;        /* rounded corners for form */
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  margin: 20px auto;          /* center form on page */
+  margin: 20px auto;
 }
 
 /* ===== INPUTS & TEXTAREA ===== */
@@ -45,23 +50,34 @@ button:hover {
   background-color: #5c2360;
 }
 
-/* ===== MESSAGES ===== */
+/* ===== MESSAGES CONTAINER ===== */
 #messages {
   width: 80%;
   max-width: 600px;
   margin: 20px auto;
   text-align: left;
-  background-color: #fff;
-  padding: 15px;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-#messages p {
-  margin: 0 0 10px 0;
+/* ===== INDIVIDUAL MESSAGE BOX ===== */
+.message-box {
+  background-color: #ef931b;   /* orange box */
+  border-radius: 15px;         /* rounded corners */
+  padding: 15px 20px;          /* spacing inside the box */
+  margin-bottom: 15px;         /* space between messages */
+  color: black;
+  word-wrap: break-word;       /* ensure long text wraps */
+  box-sizing: border-box;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-#messages hr {
-  border: none;
-  border-top: 1px solid #ccc;
-  margin: 10px 0;
+
+.message-box strong {
+  display: block;             /* name on its own line */
+  margin-bottom: 5px;
+}
+
+.message-box small {
+  display: block;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+  color: #333;
 }
