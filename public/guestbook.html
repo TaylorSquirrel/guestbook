@@ -20,7 +20,7 @@
 <div id="messages"></div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbwWcF6p_yN6z994DG_qM8SXFdZwOnM-cY6danysq0HrUszm3g6Mr7vwMll7jiFN4Dlgjg/exec";
+const API = "/api/messages"; // calls your Render server
 
 const form = document.getElementById("form");
 const messagesDiv = document.getElementById("messages");
@@ -31,8 +31,7 @@ async function loadMessages() {
     const data = await res.json();
 
     messagesDiv.innerHTML = "";
-
-    data.reverse().forEach(msg => {
+    data.forEach(msg => {
       messagesDiv.innerHTML += `
         <div class="message-box">
           <strong>${msg.name}</strong>
@@ -41,14 +40,13 @@ async function loadMessages() {
         </div>
       `;
     });
-  } catch (err) {
+  } catch {
     messagesDiv.innerHTML = "<p>Failed to load messages.</p>";
   }
 }
 
-form.addEventListener("submit", async (e) => {
+form.addEventListener("submit", async e => {
   e.preventDefault();
-
   try {
     await fetch(API, {
       method: "POST",
@@ -57,10 +55,9 @@ form.addEventListener("submit", async (e) => {
         message: document.getElementById("message").value
       })
     });
-
     form.reset();
     loadMessages();
-  } catch (err) {
+  } catch {
     alert("Failed to submit message.");
   }
 });
