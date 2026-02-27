@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 const PORT = process.env.PORT || 10000;
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGICkZxEpnz6OSRfTbWwT6Svq0LSFdsVP-FFBdq9u3_v3Dm5AUl3bAFMH9zLxNuAxUmg/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzpfYb1Eopd0VxkWD0RqXnIuOeQRXxCH1AsBJihylBFLlyTED_l7dOdNZ2ivbSOZ1UMpQ/exec";
 
 // Serve guestbook.html at /
 app.get("/", (req, res) => {
@@ -50,4 +50,5 @@ app.post("/api/messages", async (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
 
