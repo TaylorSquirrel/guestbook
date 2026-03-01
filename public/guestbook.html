@@ -8,7 +8,10 @@
 </head>
 <body>
 
-<h1>Guestbook!!<a href="mraw.neocities.org" style="color: #ef931b;">Return</a>
+<h1>
+  Guestbook!!
+  <a href="https://mraw.neocities.org" style="color: #ef931b;">Return</a>
+</h1>
 
 <form id="form">
   <input type="text" id="name" placeholder="Your name (optional)">
@@ -20,13 +23,14 @@
 <div id="messages"></div>
 
 <script>
-const API = "/api/messages"; // your server endpoint
+const API = "/api/messages";
 
 const form = document.getElementById("form");
 const messagesDiv = document.getElementById("messages");
 
-// Escape HTML to prevent XSS
+// Prevent XSS
 function escapeHTML(str) {
+  if (!str) return "";
   return str.replace(/[&<>"']/g, tag => ({
     '&':'&amp;',
     '<':'&lt;',
@@ -36,44 +40,73 @@ function escapeHTML(str) {
   }[tag]));
 }
 
-// Load messages from the server
+// Load messages
 async function loadMessages() {
   try {
     const res = await fetch(API);
+
+    if (!res.ok) {
+      messagesDiv.innerHTML = "<p>Failed to load messages.</p>";
+      return;
+    }
+
     const data = await res.json();
 
     messagesDiv.innerHTML = "";
+
+    if (!Array.isArray(data) || data.length === 0) {
+      messagesDiv.innerHTML = "<p>No messages yet.</p>";
+      return;
+    }
+
     data.forEach(msg => {
-      messagesDiv.innerHTML += `
-        <div class="message-box">
-          <strong>${escapeHTML(msg.name || "Anonymous")}</strong>
-          <small>${new Date(msg.date).toLocaleString()}</small>
-          <p>${escapeHTML(msg.message)}</p>
-        </div>
+      const div = document.createElement("div");
+      div.className = "message-box";
+
+      div.innerHTML = `
+        <strong>${escapeHTML(msg.name || "Anonymous")}</strong>
+        <small>${msg.date ? new Date(msg.date).toLocaleString() : ""}</small>
+        <p>${escapeHTML(msg.message)}</p>
       `;
+
+      messagesDiv.appendChild(div);
     });
-  } catch {
-    messagesDiv.innerHTML = "<p>Failed to load messages.</p>";
+
+  } catch (err) {
+    messagesDiv.innerHTML = "<p>Network error loading messages.</p>";
   }
 }
 
-// Handle form submission
-form.addEventListener("submit", async e => {
+// Submit form
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const name = document.getElementById("name").value || "Anonymous";
-  const message = document.getElementById("message").value;
+  const message = document.getElementById("message").value.trim();
+
+  if (!message) {
+    alert("Message cannot be empty.");
+    return;
+  }
 
   try {
-    await fetch(API, {
+    const res = await fetch(API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, message })
     });
 
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      alert(errorData.error || "Failed to submit message.");
+      return;
+    }
+
     form.reset();
-    loadMessages();
-  } catch {
-    alert("Failed to submit message.");
+    await loadMessages();
+
+  } catch (err) {
+    alert("Network error while submitting.");
   }
 });
 
